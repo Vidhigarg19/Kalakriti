@@ -1,9 +1,11 @@
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { AppProvider } from '@/lib/store';
 import { Navigation } from '@/components/Navigation';
-import { Footer, WorkflowStrip } from '@/components/Footer';
+import { Footer } from '@/components/Footer';
 import { DemoBadge, OfflineBanner } from '@/components/DemoBadge';
+import { LoadingScreen } from '@/components/LoadingScreen';
 import { HomePage } from '@/pages/HomePage';
 import { CatalogPage } from '@/pages/CatalogPage';
 import { ProductDetailPage } from '@/pages/ProductDetailPage';
@@ -75,10 +77,23 @@ function AnimatedRoutes() {
 }
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const minLoadTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2100);
+
+    return () => clearTimeout(minLoadTimer);
+  }, []);
+
   return (
     <AppProvider>
       <BrowserRouter>
         <div className="min-h-screen flex flex-col bg-hero grain-overlay">
+          <AnimatePresence mode="wait">
+            {isLoading && <LoadingScreen />}
+          </AnimatePresence>
           <OfflineBanner />
           <Navigation />
           <main className="flex-1 pt-16">
