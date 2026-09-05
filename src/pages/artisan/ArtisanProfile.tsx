@@ -38,7 +38,7 @@ export function ArtisanProfile() {
               <MapPin size={18} className="text-terracotta" />
               <div>
                 <p className="text-xs text-taupe/60">{t('product.origin')}</p>
-                <p className="text-sm text-ivory">{artisan?.location}, Uttarakhand</p>
+                <p className="text-sm text-ivory">{artisan?.location}</p>
               </div>
             </div>
             <div className="flex items-center gap-3 p-3 bg-walnut-dark rounded-xl">

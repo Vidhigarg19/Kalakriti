@@ -4,6 +4,7 @@ import { AppProvider } from '@/lib/store';
 import { Navigation } from '@/components/Navigation';
 import { Footer, WorkflowStrip } from '@/components/Footer';
 import { DemoBadge, OfflineBanner } from '@/components/DemoBadge';
+import { ScrollToTop } from '@/components/ScrollToTop';
 import { HomePage } from '@/pages/HomePage';
 import { CatalogPage } from '@/pages/CatalogPage';
 import { ProductDetailPage } from '@/pages/ProductDetailPage';
@@ -78,6 +79,7 @@ function App() {
   return (
     <AppProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <div className="min-h-screen flex flex-col bg-hero grain-overlay">
           <OfflineBanner />
           <Navigation />

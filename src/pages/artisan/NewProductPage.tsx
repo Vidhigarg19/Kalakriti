@@ -263,7 +263,7 @@ export function NewProductPage() {
       category: aiResult.productFacts.category, craftType: aiResult.productFacts.craftType,
       material: aiResult.productFacts.materials.join(', '), colors: aiResult.productFacts.colors,
       dimensions: aiResult.productFacts.dimensions, weight: aiResult.productFacts.weight,
-      technique: aiResult.productFacts.technique, originRegion: artisan?.location ? `${artisan.location}, Uttarakhand` : 'Uttarakhand',
+      technique: aiResult.productFacts.technique, originRegion: artisan?.location || aiResult.productFacts.originRegion || 'India',
       careInstructionsEn: aiResult.listing.careInstructionsEn, careInstructionsHi: aiResult.listing.careInstructionsHi,
       productionTime: aiResult.productFacts.productionTime,
       stockQuantity: aiResult.productFacts.stockQuantity,

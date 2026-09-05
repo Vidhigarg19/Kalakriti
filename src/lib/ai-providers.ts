@@ -122,7 +122,7 @@ export class MockListingProvider implements ListingProvider {
       dimensions: '200cm x 90cm',
       weight: '450g',
       technique: 'Handloom weaving',
-      originRegion: 'Uttarakhand',
+      originRegion: 'Jaipur, Rajasthan',
       productionTime: '10–14 days',
       careInstructions: 'Dry clean only. Store in a cool, dry place.',
       stockQuantity: 1,

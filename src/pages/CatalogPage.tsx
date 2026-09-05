@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useMemo, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search, SlidersHorizontal, X, Heart, MapPin, ArrowRight } from 'lucide-react';
 import { useApp } from '@/lib/store';
@@ -8,12 +8,20 @@ import { fadeUp, staggerContainer, staggerItem } from '@/lib/animations';
 
 export function CatalogPage() {
   const { t, language, products, favorites, toggleFavorite } = useApp();
+  const [searchParams] = useSearchParams();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [craftType, setCraftType] = useState('');
   const [region, setRegion] = useState('');
   const [sort, setSort] = useState('newest');
   const [showFilters, setShowFilters] = useState(false);
+
+  useEffect(() => {
+    const q = searchParams.get('search');
+    const r = searchParams.get('region');
+    if (q !== null) setSearch(q);
+    if (r !== null) setRegion(r);
+  }, [searchParams]);
 
   const filtered = useMemo(() => {
     let result = products.filter((p) => p.status === 'published');
