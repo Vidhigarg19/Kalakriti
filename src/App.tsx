@@ -13,6 +13,7 @@ import { ProductDetailPage } from '@/pages/ProductDetailPage';
 import { AboutPage } from '@/pages/AboutPage';
 import { PartnersPage } from '@/pages/PartnersPage';
 import { AuthPage } from '@/pages/AuthPage';
+import { ArtisanLayout } from '@/pages/artisan/ArtisanLayout';
 import { ArtisanDashboard } from '@/pages/artisan/ArtisanDashboard';
 import { ArtisanProducts } from '@/pages/artisan/ArtisanProducts';
 import { NewProductPage } from '@/pages/artisan/NewProductPage';
@@ -40,23 +41,27 @@ function AnimatedRoutes() {
         <Route path="/auth/artisan" element={<AuthPage initialRole="artisan" />} />
         <Route path="/auth/buyer" element={<AuthPage initialRole="buyer" />} />
 
-        <Route path="/artisan/dashboard" element={
-          <ProtectedRoute roles={['artisan']}><ArtisanDashboard /></ProtectedRoute>
-        } />
-        <Route path="/artisan/products" element={
-          <ProtectedRoute roles={['artisan']}><ArtisanProducts /></ProtectedRoute>
-        } />
+        {/* Artisan pages that share the sidebar + top bar layout */}
+        <Route
+          path="/artisan"
+          element={
+            <ProtectedRoute roles={['artisan']}>
+              <ArtisanLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="dashboard" element={<ArtisanDashboard />} />
+          <Route path="products" element={<ArtisanProducts />} />
+          <Route path="inquiries" element={<ArtisanInquiries />} />
+          <Route path="profile" element={<ArtisanProfile />} />
+        </Route>
+
+        {/* Artisan pages that intentionally stay full-screen, without the sidebar */}
         <Route path="/artisan/products/new" element={
           <ProtectedRoute roles={['artisan']}><NewProductPage /></ProtectedRoute>
         } />
         <Route path="/artisan/products/:productId" element={
           <ProtectedRoute roles={['artisan']}><ArtisanProductDetail /></ProtectedRoute>
-        } />
-        <Route path="/artisan/inquiries" element={
-          <ProtectedRoute roles={['artisan']}><ArtisanInquiries /></ProtectedRoute>
-        } />
-        <Route path="/artisan/profile" element={
-          <ProtectedRoute roles={['artisan']}><ArtisanProfile /></ProtectedRoute>
         } />
 
         <Route path="/buyer/favorites" element={
