@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Sparkles, Camera, Mic, CheckCircle, Store, ArrowRight } from 'lucide-react';
 import { useApp } from '@/lib/store';
+import kalakritiLogo from '@/assets/kalakriti-logo.png';
 
 export function WorkflowStrip() {
   const { t } = useApp();
@@ -47,9 +48,14 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
-            <h3 className="font-serif text-lg font-semibold text-ivory mb-3">
-              Kalakriti<span className="text-terracotta">+</span>
-            </h3>
+            <Link to="/" className="inline-block mb-3">
+              <img
+                src={kalakritiLogo}
+                alt="Kalakriti+"
+                className="h-16 sm:h-20 w-auto max-w-[260px] sm:max-w-[340px] object-contain"
+                loading="lazy"
+              />
+            </Link>
             <p className="text-sm text-taupe max-w-md leading-relaxed">
               {t('hero.subtitle')}
             </p>

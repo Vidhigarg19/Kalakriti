@@ -94,6 +94,32 @@
       0 2px 8px rgba(0, 0, 0, 0.2);
   }
 
+  /* Immersive hero: deep layered dark background */
+  .hero-deep-bg {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 45%, rgba(61, 43, 31, 0.7) 0%, rgba(31, 23, 18, 0.95) 55%, #15100c 100%),
+      linear-gradient(180deg, #2a1d14 0%, #1f1712 40%, #15100c 100%);
+  }
+
+  /* Immersive hero: warm focused spotlight near artisan objects */
+  .hero-warm-glow {
+    background:
+      radial-gradient(circle 420px at 78% 30%, rgba(193, 80, 46, 0.16) 0%, rgba(193, 80, 46, 0.06) 35%, transparent 65%),
+      radial-gradient(circle 300px at 20% 78%, rgba(92, 110, 74, 0.10) 0%, transparent 60%);
+  }
+
+  /* Hero dust particle base style */
+  .dust-dot {
+    @apply rounded-full pointer-events-none;
+    background-color: rgba(212, 201, 185, 0.7);
+    filter: blur(0.2px);
+    box-shadow: 0 0 4px rgba(212, 201, 185, 0.4);
+  }
+  .dust-dot.terracotta {
+    background-color: rgba(214, 112, 80, 0.55);
+    box-shadow: 0 0 5px rgba(214, 112, 80, 0.35);
+  }
+
   /* Premium button */
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-medium text-ivory bg-terracotta hover:bg-terracotta-dark transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5;

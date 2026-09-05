@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Globe, LogOut, ShieldCheck, ChevronDown } from 'lucide-react';
 import { useApp } from '@/lib/store';
+import kalakritiLogo from '@/assets/kalakriti-logo.png';
 
 export function Navigation() {
   const { t, language, setLanguage, user, logout } = useApp();
@@ -29,9 +30,12 @@ export function Navigation() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <span className="font-serif text-xl font-semibold text-ivory tracking-tight">
-              Kalakriti<span className="text-terracotta">+</span>
-            </span>
+            <img
+              src={kalakritiLogo}
+              alt="Kalakriti+"
+              className="h-12 sm:h-14 w-auto max-w-[220px] sm:max-w-[280px] object-contain"
+              loading="eager"
+            />
           </Link>
 
           {/* Desktop nav */}

@@ -1,124 +1,363 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles, ShieldCheck, Mic, Camera, Heart, Users, Hand } from 'lucide-react';
 import { useApp } from '@/lib/store';
 import { WorkflowStrip } from '@/components/Footer';
-import { fadeUp, staggerContainer, staggerItem, softFloat } from '@/lib/animations';
+import { fadeUp, staggerContainer, staggerItem, particleDrift } from '@/lib/animations';
 import { demoArtisans } from '@/data/seed';
+import heroElements from '@/assets/hero-elements.png';
+
+function WindStreaks({ count = 4 }: { count?: number }) {
+  return (
+    <>
+      {Array.from({ length: count }, (_, i) => (
+        <motion.span
+          key={i}
+          aria-hidden="true"
+          className="absolute h-[2px] rounded-full bg-gradient-to-r from-transparent via-ivory/45 to-transparent blur-[1px] pointer-events-none z-[6]"
+          style={{
+            width: '42%',
+            top: `${16 + i * 17}%`,
+            left: '-12%',
+            transform: 'rotate(-11deg)',
+          }}
+          animate={{ x: ['0%', '280%'], opacity: [0, 0.55, 0] }}
+          transition={{
+            duration: 3.4 + i * 0.6,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: i * 0.85,
+          }}
+        />
+      ))}
+    </>
+  );
+}
 
 export function HomePage() {
   const { t, language, products } = useApp();
   const publishedProducts = products.filter((p) => p.status === 'published');
 
+  const particlePositions = useMemo(
+    () =>
+      Array.from({ length: 32 }, (_, i) => ({
+        id: i,
+        top: `${15 + ((i * 37) % 70)}%`,
+        left: `${5 + ((i * 53) % 90)}%`,
+        size: 1 + (i % 3),
+        isTerra: i % 5 === 0,
+      })),
+    [],
+  );
+
   return (
-    <div className="bg-hero grain-overlay warm-vignette">
+    <div className="bg-hero grain-overlay hero-deep-bg">
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
-        {/* Background texture */}
-        <div className="absolute inset-0 weave-texture opacity-30" />
-        <div className="absolute inset-0 warm-vignette" />
+      <section className="relative overflow-hidden pt-8 pb-14 sm:pt-10 sm:pb-16 lg:pt-12 lg:pb-20">
+        {/* Base texture & warm vignette layers */}
+        <div className="absolute inset-0 weave-texture opacity-25 pointer-events-none" />
+        <div className="absolute inset-0 warm-vignette pointer-events-none" />
+        <div className="absolute inset-0 hero-warm-glow pointer-events-none" />
 
-        {/* Warm light orbs */}
+        {/* Cinematic amber light cone behind the object cluster */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(circle 520px at 78% 32%, rgba(230, 165, 90, 0.18) 0%, rgba(193, 80, 46, 0.10) 35%, transparent 65%)',
+          }}
+        />
+
+        {/* Animated ambient orbs of light */}
         <motion.div
-          className="absolute top-1/4 right-1/4 w-96 h-96 rounded-full bg-terracotta/10 blur-3xl"
-          animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute top-[22%] right-[14%] w-[30rem] h-[30rem] rounded-full bg-terracotta/15 blur-3xl pointer-events-none"
+          animate={{ scale: [1, 1.08, 1], opacity: [0.26, 0.52, 0.26] }}
+          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
         />
         <motion.div
-          className="absolute bottom-1/4 left-1/4 w-80 h-80 rounded-full bg-olive/10 blur-3xl"
-          animate={{ scale: [1, 1.15, 1], opacity: [0.2, 0.4, 0.2] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute bottom-[8%] left-[8%] w-[22rem] h-[22rem] rounded-full bg-olive/10 blur-3xl pointer-events-none"
+          animate={{ scale: [1, 1.12, 1], opacity: [0.18, 0.34, 0.18] }}
+          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
         />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left: Text block (~45%) */}
-            <motion.div
-              variants={staggerContainer}
-              initial="hidden"
-              animate="visible"
-              className="lg:max-w-[45%]"
-            >
-              <motion.h1
-                variants={fadeUp}
-                className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-ivory leading-[1.1] text-balance"
-              >
-                Crafts that{' '}
-                <span className="italic text-terracotta">{t('hero.titleHighlight')}</span>
-                {' '}for themselves
-              </motion.h1>
+        {/* Floating dust particles */}
+        {particlePositions.map((p) => (
+          <motion.span
+            key={p.id}
+            variants={particleDrift}
+            initial="hidden"
+            animate="visible"
+            custom={p.id}
+            aria-hidden="true"
+            className={`absolute dust-dot ${p.isTerra ? 'terracotta' : ''} will-change-transform`}
+            style={{
+              top: p.top,
+              left: p.left,
+              width: `${p.size}px`,
+              height: `${p.size}px`,
+              zIndex: 5,
+            }}
+          />
+        ))}
 
-              <motion.p
-                variants={fadeUp}
-                className="mt-6 text-lg text-taupe/90 leading-relaxed max-w-md"
-              >
-                {t('hero.subtitle')}
-              </motion.p>
-
+        <div className="relative w-full z-10 px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl">
+            {/* DESKTOP (lg+) */}
+            <div className="hidden lg:grid lg:grid-cols-[2fr_3fr] lg:gap-6 lg:items-center">
+              {/* ===== TEXT COLUMN ===== */}
               <motion.div
-                variants={fadeUp}
-                className="mt-8 flex flex-wrap gap-4"
+                variants={staggerContainer}
+                initial="hidden"
+                animate="visible"
+                className="relative z-40 max-w-xl"
               >
-                <Link to="/catalog" className="btn-primary group">
-                  {t('hero.cta.explore')}
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </Link>
-                <Link to="/auth/artisan" className="btn-secondary group">
-                  {t('hero.cta.sell')}
-                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </motion.div>
-            </motion.div>
+                <motion.h1
+                  variants={fadeUp}
+                  className="font-serif text-5xl xl:text-6xl font-semibold text-ivory leading-[1.05] tracking-[-0.015em] text-balance"
+                >
+                  <span className="block">Crafts that</span>
+                  <span className="block mt-1">
+                    <span className="italic text-terracotta">{t('hero.titleHighlight')}</span>
+                    <span className="text-ivory"> for</span>
+                  </span>
+                  <span className="block mt-1">themselves.</span>
+                </motion.h1>
 
-            {/* Right: Image cluster */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="relative hidden lg:block"
-            >
-              <div className="relative w-full max-w-md mx-auto">
                 <motion.div
-                  variants={softFloat}
+                  variants={fadeUp}
+                  className="mt-8 flex items-center gap-4 w-full max-w-md"
+                  aria-hidden="true"
+                >
+                  <span className="h-px flex-1 bg-gradient-to-r from-taupe/50 via-taupe/30 to-terracotta/60" />
+                  <span className="text-terracotta text-[1.3rem] font-serif select-none">✿</span>
+                  <span className="h-px flex-1 bg-gradient-to-l from-taupe/50 via-taupe/30 to-terracotta/60" />
+                </motion.div>
+
+                <motion.p
+                  variants={fadeUp}
+                  className="mt-8 text-lg xl:text-xl text-taupe/90 leading-[1.55] max-w-lg"
+                >
+                  {t('hero.subtitle')}
+                </motion.p>
+
+                <motion.div variants={fadeUp} className="mt-10 flex flex-wrap gap-5">
+                  <Link to="/catalog" className="btn-primary group">
+                    {t('hero.cta.explore')}
+                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                  <Link to="/auth/artisan" className="btn-secondary group">
+                    {t('hero.cta.sell')}
+                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </motion.div>
+              </motion.div>
+
+              {/* ===== OBJECT CLUSTER COLUMN (single image) ===== */}
+              <div className="relative h-[560px] xl:h-[640px] overflow-visible">
+                {/* Warm halo behind the cluster */}
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 z-0"
+                  style={{
+                    background:
+                      'radial-gradient(ellipse 65% 65% at 55% 40%, rgba(240, 175, 100, 0.18) 0%, rgba(193, 80, 46, 0.11) 32%, rgba(61, 43, 31, 0.26) 58%, transparent 80%)',
+                    filter: 'blur(12px)',
+                  }}
+                />
+
+                <WindStreaks count={4} />
+
+                <motion.div
+                  variants={fadeUp}
                   initial="hidden"
                   animate="visible"
-                  className="relative z-20 rounded-2xl overflow-hidden shadow-2xl border border-walnut-light/30"
+                  className="absolute inset-0 flex items-center justify-center z-[20]"
                 >
-                  <img
-                    src="https://images.pexels.com/photos/28303415/pexels-photo-28303415.jpeg?auto=compress&cs=tinysrgb&w=600"
-                    alt="Handwoven textile"
-                    className="w-full h-[400px] object-cover"
+                  <motion.img
+                    src={heroElements}
+                    alt="Terracotta pot, bamboo basket, handwoven shawl and carved wooden blocks"
                     loading="eager"
-                  />
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.6, duration: 0.8 }}
-                  className="absolute -bottom-8 -left-8 w-40 h-40 rounded-xl overflow-hidden shadow-xl border border-walnut-light/30 z-10"
-                >
-                  <img
-                    src="https://images.pexels.com/photos/14367748/pexels-photo-14367748.jpeg?auto=compress&cs=tinysrgb&w=300"
-                    alt="Bamboo basket"
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8, duration: 0.8 }}
-                  className="absolute -top-6 -right-6 w-32 h-32 rounded-lg overflow-hidden shadow-xl border border-walnut-light/30 z-30"
-                >
-                  <img
-                    src="https://images.pexels.com/photos/6786952/pexels-photo-6786952.jpeg?auto=compress&cs=tinysrgb&w=300"
-                    alt="Embroidered textile"
-                    className="w-full h-full object-cover"
-                    loading="lazy"
+                    animate={{
+                      rotate: [-2, -4.5, -1.5, -3.5, -2],
+                      y: [0, -14, -4, -16, 0],
+                      skewX: [0, 1.4, -0.9, 1.1, 0],
+                    }}
+                    transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
+                    className="w-[112%] max-w-none h-auto object-contain drop-shadow-[0_34px_60px_rgba(0,0,0,0.66)] will-change-transform select-none pointer-events-none origin-center"
+                    style={{
+                      filter:
+                        'drop-shadow(0 0 30px rgba(230, 150, 90, 0.18)) drop-shadow(0 0 68px rgba(214, 112, 80, 0.10))',
+                    }}
                   />
                 </motion.div>
               </div>
-            </motion.div>
+            </div>
+
+            {/* ===== TABLET (md, lg:hidden) ===== */}
+            <div className="hidden md:block lg:hidden">
+              <motion.div
+                variants={staggerContainer}
+                initial="hidden"
+                animate="visible"
+                className="relative z-40 max-w-2xl mx-auto text-center"
+              >
+                <motion.h1
+                  variants={fadeUp}
+                  className="font-serif text-6xl font-semibold text-ivory leading-[1.05] tracking-[-0.01em] text-balance"
+                >
+                  <span className="block">Crafts that</span>
+                  <span className="block mt-1">
+                    <span className="italic text-terracotta">{t('hero.titleHighlight')}</span>
+                    <span className="text-ivory"> for</span>
+                  </span>
+                  <span className="block mt-1">themselves.</span>
+                </motion.h1>
+                <motion.div
+                  variants={fadeUp}
+                  className="mt-6 flex items-center gap-4 w-full max-w-sm mx-auto"
+                  aria-hidden="true"
+                >
+                  <span className="h-px flex-1 bg-gradient-to-r from-taupe/40 to-terracotta/50" />
+                  <span className="text-terracotta text-lg font-serif select-none">✿</span>
+                  <span className="h-px flex-1 bg-gradient-to-l from-taupe/40 to-terracotta/50" />
+                </motion.div>
+                <motion.p variants={fadeUp} className="mt-6 text-lg text-taupe/90 leading-relaxed max-w-lg mx-auto">
+                  {t('hero.subtitle')}
+                </motion.p>
+                <motion.div variants={fadeUp} className="mt-8 flex flex-wrap justify-center gap-4">
+                  <Link to="/catalog" className="btn-primary group">
+                    {t('hero.cta.explore')}
+                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                  <Link to="/auth/artisan" className="btn-secondary group">
+                    {t('hero.cta.sell')}
+                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </motion.div>
+              </motion.div>
+
+              <div className="relative w-full max-w-2xl mx-auto mt-10 h-[440px] overflow-visible">
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 z-0"
+                  style={{
+                    background:
+                      'radial-gradient(ellipse 70% 65% at 60% 40%, rgba(240, 175, 100, 0.16) 0%, rgba(193, 80, 46, 0.10) 35%, rgba(61, 43, 31, 0.28) 60%, transparent 82%)',
+                    filter: 'blur(12px)',
+                  }}
+                />
+
+                <WindStreaks count={3} />
+
+                <motion.div
+                  variants={fadeUp}
+                  initial="hidden"
+                  animate="visible"
+                  className="absolute inset-0 flex items-center justify-center z-[20]"
+                >
+                  <motion.img
+                    src={heroElements}
+                    alt="Terracotta pot, bamboo basket, handwoven shawl and carved wooden blocks"
+                    loading="eager"
+                    animate={{
+                      rotate: [-2, -4, -1.5, -3, -2],
+                      y: [0, -11, -3, -13, 0],
+                      skewX: [0, 1.1, -0.7, 0.9, 0],
+                    }}
+                    transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+                    className="w-[105%] max-w-none h-auto object-contain drop-shadow-[0_28px_50px_rgba(0,0,0,0.64)] will-change-transform select-none pointer-events-none origin-center"
+                    style={{
+                      filter:
+                        'drop-shadow(0 0 26px rgba(230, 150, 90, 0.18)) drop-shadow(0 0 56px rgba(214, 112, 80, 0.10))',
+                    }}
+                  />
+                </motion.div>
+              </div>
+            </div>
+
+            {/* ===== MOBILE (<md) ===== */}
+            <div className="md:hidden w-full max-w-xl mx-auto">
+              <motion.div
+                variants={staggerContainer}
+                initial="hidden"
+                animate="visible"
+                className="relative z-20 px-2"
+              >
+                <motion.h1
+                  variants={fadeUp}
+                  className="font-serif text-4xl sm:text-5xl font-semibold text-ivory leading-[1.05] tracking-[-0.01em] text-balance"
+                >
+                  <span className="block">Crafts that</span>
+                  <span className="block mt-1">
+                    <span className="italic text-terracotta">{t('hero.titleHighlight')}</span>
+                    <span className="text-ivory"> for</span>
+                  </span>
+                  <span className="block mt-1">themselves.</span>
+                </motion.h1>
+                <motion.div
+                  variants={fadeUp}
+                  className="mt-6 flex items-center gap-3 w-full max-w-xs"
+                  aria-hidden="true"
+                >
+                  <span className="h-px flex-1 bg-gradient-to-r from-taupe/40 to-terracotta/50" />
+                  <span className="text-terracotta text-base font-serif select-none">✿</span>
+                  <span className="h-px flex-1 bg-gradient-to-l from-taupe/40 to-terracotta/50" />
+                </motion.div>
+                <motion.p variants={fadeUp} className="mt-6 text-lg text-taupe/90 leading-relaxed">
+                  {t('hero.subtitle')}
+                </motion.p>
+                <motion.div variants={fadeUp} className="mt-8 flex flex-wrap gap-4">
+                  <Link to="/catalog" className="btn-primary group">
+                    {t('hero.cta.explore')}
+                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                  <Link to="/auth/artisan" className="btn-secondary group">
+                    {t('hero.cta.sell')}
+                    <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </motion.div>
+              </motion.div>
+
+              <div className="relative w-full h-[380px] sm:h-[420px] mt-10 overflow-visible">
+                <div
+                  aria-hidden="true"
+                  className="absolute inset-0 z-0"
+                  style={{
+                    background:
+                      'radial-gradient(ellipse 70% 60% at 60% 45%, rgba(240, 175, 100, 0.14) 0%, rgba(193, 80, 46, 0.10) 35%, rgba(61, 43, 31, 0.25) 60%, transparent 82%)',
+                    filter: 'blur(10px)',
+                  }}
+                />
+
+                <WindStreaks count={3} />
+
+                <motion.div
+                  variants={fadeUp}
+                  initial="hidden"
+                  animate="visible"
+                  className="absolute inset-0 flex items-center justify-center z-[20]"
+                >
+                  <motion.img
+                    src={heroElements}
+                    alt="Terracotta pot, bamboo basket, handwoven shawl and carved wooden blocks"
+                    loading="eager"
+                    animate={{
+                      rotate: [-1.5, -3.5, -1, -2.8, -1.5],
+                      y: [0, -9, -2, -10, 0],
+                      skewX: [0, 0.9, -0.6, 0.8, 0],
+                    }}
+                    transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+                    className="w-[100%] max-w-none h-auto object-contain drop-shadow-[0_22px_40px_rgba(0,0,0,0.6)] will-change-transform select-none pointer-events-none origin-center"
+                    style={{
+                      filter:
+                        'drop-shadow(0 0 22px rgba(230, 150, 90, 0.18)) drop-shadow(0 0 48px rgba(214, 112, 80, 0.10))',
+                    }}
+                  />
+                </motion.div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
