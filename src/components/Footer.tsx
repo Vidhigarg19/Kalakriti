@@ -87,7 +87,7 @@ export function Footer() {
             © 2026 Kalakriti+. {t('common.demoContent')}.
           </p>
           <p className="text-xs text-taupe/60">
-            Built for SIH demonstration · Uttarakhand craft cluster
+            Built for SIH demonstration · Pan-India craft marketplace
           </p>
         </div>
       </div>

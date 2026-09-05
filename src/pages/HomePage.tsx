@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles, ShieldCheck, Mic, Camera, Heart, Users, Hand } from 'lucide-react';
 import { useApp } from '@/lib/store';
-import { WorkflowStrip } from '@/components/Footer';
+import { HowItWorksSection } from '@/components/HowItWorksSection';
 import { fadeUp, staggerContainer, staggerItem, particleDrift } from '@/lib/animations';
 import { demoArtisans } from '@/data/seed';
 import heroElements from '@/assets/hero-elements.png';
@@ -111,7 +111,7 @@ export function HomePage() {
                 variants={staggerContainer}
                 initial="hidden"
                 animate="visible"
-                className="relative z-40 max-w-xl"
+                className="relative z-40 max-w-xl lg:-mt-10"
               >
                 <motion.h1
                   variants={fadeUp}
@@ -142,12 +142,12 @@ export function HomePage() {
                   {t('hero.subtitle')}
                 </motion.p>
 
-                <motion.div variants={fadeUp} className="mt-10 flex flex-wrap gap-5">
-                  <Link to="/catalog" className="btn-primary group">
+                <motion.div variants={fadeUp} className="mt-10 flex flex-nowrap gap-3">
+                  <Link to="/catalog" className="btn-primary group whitespace-nowrap">
                     {t('hero.cta.explore')}
                     <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                   </Link>
-                  <Link to="/auth/artisan" className="btn-secondary group">
+                  <Link to="/auth/artisan" className="btn-secondary group whitespace-nowrap">
                     {t('hero.cta.sell')}
                     <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                   </Link>
@@ -201,7 +201,7 @@ export function HomePage() {
                 variants={staggerContainer}
                 initial="hidden"
                 animate="visible"
-                className="relative z-40 max-w-2xl mx-auto text-center"
+                className="relative z-40 max-w-2xl mx-auto text-center md:-mt-6"
               >
                 <motion.h1
                   variants={fadeUp}
@@ -226,12 +226,12 @@ export function HomePage() {
                 <motion.p variants={fadeUp} className="mt-6 text-lg text-taupe/90 leading-relaxed max-w-lg mx-auto">
                   {t('hero.subtitle')}
                 </motion.p>
-                <motion.div variants={fadeUp} className="mt-8 flex flex-wrap justify-center gap-4">
-                  <Link to="/catalog" className="btn-primary group">
+                <motion.div variants={fadeUp} className="mt-8 flex flex-nowrap justify-center gap-3">
+                  <Link to="/catalog" className="btn-primary group whitespace-nowrap">
                     {t('hero.cta.explore')}
                     <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                   </Link>
-                  <Link to="/auth/artisan" className="btn-secondary group">
+                  <Link to="/auth/artisan" className="btn-secondary group whitespace-nowrap">
                     {t('hero.cta.sell')}
                     <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                   </Link>
@@ -283,7 +283,7 @@ export function HomePage() {
                 variants={staggerContainer}
                 initial="hidden"
                 animate="visible"
-                className="relative z-20 px-2"
+                className="relative z-20 px-2 -mt-4"
               >
                 <motion.h1
                   variants={fadeUp}
@@ -362,28 +362,8 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Workflow Strip */}
-      <section id="how-it-works" className="py-16 bg-walnut-dark/50 border-y border-walnut-light/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="text-center mb-10"
-          >
-            <h2 className="font-serif text-2xl md:text-3xl text-ivory mb-2">
-              {language === 'hi' ? 'कैसे काम करता है' : 'How It Works'}
-            </h2>
-            <p className="text-taupe text-sm">
-              {language === 'hi'
-                ? 'दिखाएं → बोलें → AI → पुष्टि → बेचें'
-                : 'Show → Speak → AI → Confirm → Sell'}
-            </p>
-          </motion.div>
-          <WorkflowStrip />
-        </div>
-      </section>
+      {/* How It Works */}
+      <HowItWorksSection />
 
       {/* Social Impact Purpose */}
       <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
